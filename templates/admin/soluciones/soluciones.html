@@ -1,0 +1,346 @@
+{% extends "admin/base_site.html" %} {% load static %} {% block content %}
+
+<!-- Contenedor principal con estilo de Jazzmin -->
+<div class="container jazzmin-default">
+  <!-- Tarjeta principal para SILICE -->
+  <div class="card jazzmin-card">
+    <div class="card-header bg-primary text-white">SILICE</div>
+    <div class="card-body">
+      <!-- Subtarjeta para cada protocolo -->
+      <div class="card-deck">
+        <!-- Protocolo 1 -->
+        <div class="card">
+          <div class="card-header">Molibdato de amonio para silice</div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li class="list-group-item">
+                Pesar 30 gr de molibdato de amonio
+              </li>
+              <li class="list-group-item">Disolver en 800 ml de agua</li>
+              <li class="list-group-item">
+                Agregar 62 ml H₂SO₄ en 100 ml agua
+              </li>
+              <li class="list-group-item">Enrasar a 1 Lt</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Protocolo 2 -->
+        <div class="card">
+          <div class="card-header">Ácido tartárico</div>
+          <div class="card-body">
+            <div class="alert alert-info">
+              <strong>Procedimiento:</strong>
+              <ol>
+                <li>Pesar 120 gr de ácido tartárico</li>
+                <li>Disolver en 1 Lt de agua</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Protocolo 3 -->
+        <div class="card">
+          <div class="card-header">Ácido 1 amino 2 naftol 4 sulfónico</div>
+          <div class="card-body">
+            <table class="table table-striped">
+              <tr>
+                <th>Componente</th>
+                <th>Cantidad</th>
+              </tr>
+              <tr>
+                <td>NaSO₃</td>
+                <td>120 gr</td>
+              </tr>
+              <tr>
+                <td>1 amino 2 naftol 4 sulfónico</td>
+                <td>2 gr</td>
+              </tr>
+              <tr>
+                <td>Agregar agua</td>
+                <td>700 ml</td>
+              </tr>
+              <tr>
+                <td>Meta bisulfito de sodio</td>
+                <td>50 gr</td>
+              </tr>
+              <tr>
+                <td>Total volumen</td>
+                <td>1 Lt</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repetir el mismo patrón para los demás secciones -->
+
+  <!-- FOSFATO -->
+  <div class="card jazzmin-card">
+    <div class="card-header bg-success text-white">FOSFATO</div>
+    <div class="card-body">
+      <div class="card-deck">
+        <!-- Protocolo 1 -->
+        <div class="card">
+          <div class="card-header">Molibdato de amonio</div>
+          <div class="card-body">
+            <ol>
+              <li>50 ml H₂SO₄ en 500ml agua destilada</li>
+              <li>5 gr molibdato de amonio en agua</li>
+              <li>Enrasar a 1 Lt</li>
+            </ol>
+          </div>
+        </div>
+        <!-- Protocolo 2 -->
+        <div class="card">
+          <div class="card-header">Solución reductora</div>
+          <div class="card-body">
+            <div class="alert alert-secondary">
+              <strong>Componentes:</strong>
+              <ul>
+                <li>20 gr metol</li>
+                <li>96 gr meta bisulfito de sodio</li>
+                <li>Enrasar a 1 Lt agua</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIDRAZINA -->
+  <div class="card jazzmin-card">
+    <div class="card-header bg-warning">HIDRAZINA</div>
+    <div class="card-body">
+      <div class="card">
+        <div class="card-header">Paradimetil</div>
+        <div class="card-body">
+          <p class="text-monospace">
+            20 gr paradimetil + 161.4 ml HCl → enrasar a 1 Lt
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AMONIACO -->
+  <div class="card jazzmin-card">
+    <div class="card-header bg-info text-white">AMONIACO</div>
+    <div class="card-body">
+      <div class="card-deck">
+        <!-- Nessler -->
+        <div class="card">
+          <div class="card-header">Nessler (500ml)</div>
+          <div class="card-body">
+            <div class="alert alert-dark">
+              <ol>
+                <li>25 gr KI + 25 ml agua</li>
+                <li>12.5 gr HgCl₂ + 50 ml agua caliente</li>
+                <li>Agregar (b) a (a)</li>
+                <li>53.55 gr NaOH + 150 ml agua</li>
+                <li>Enrasar a 500ml</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        <!-- NaOH 1N -->
+        <div class="card">
+          <div class="card-header">NaOH 1N</div>
+          <div class="card-body">
+            <p>40 gr NaOH en 1 Lt agua</p>
+          </div>
+        </div>
+        <!-- EDTA 5% -->
+        <div class="card">
+          <div class="card-header">EDTA 5%</div>
+          <div class="card-body">
+            <table class="table table-sm">
+              <tr>
+                <td>5 gr EDTA</td>
+                <td>+ 1 gr NaOH en 100 ml agua</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DUREZA TOTAL -->
+  <div class="card jazzmin-card">
+    <div class="card-header bg-danger text-white">DUREZA TOTAL</div>
+    <div class="card-body">
+      <div class="card">
+        <div class="card-header">EDTA 0.02N</div>
+        <div class="card-body">
+          <p>3.726 gr EDTA + agua hasta 1 Lt</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">Indicador</div>
+        <div class="card-body">
+          <ul class="list-unstyled">
+            <li>0.25 gr Eriocromo Negro</li>
+            <li>33.7 gr Cloruro de Amonio</li>
+            <li>285 ml NH₄OH + alcohol isopropílico</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALCALINIDAD A LA P Y M -->
+  <div class="card jazzmin-card mt-4">
+    <div class="card-header bg-secondary text-white">
+      ALCALINIDAD A LA P Y M
+    </div>
+    <div class="card-body">
+      <div class="card-deck">
+        <!-- Fenolftaleína 1% -->
+        <div class="card">
+          <div class="card-header">Fenolftaleína 1%</div>
+          <div class="card-body">
+            <div class="alert alert-warning">
+              <strong>Procedimiento:</strong>
+              <ol>
+                <li>Pesar 10 gr de fenolftaleína</li>
+                <li>Disolver en mezcla de 600 ml etanol + 200 ml agua</li>
+                <li>Neutralizar con NaOH 0.1N hasta color rosado</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicador Mezclado -->
+        <div class="card">
+          <div class="card-header">Indicador Mezclado</div>
+          <div class="card-body">
+            <div class="row">
+              <!-- Solución A -->
+              <div class="col-md-6">
+                <strong>Solución A (Azul de Methylene):</strong>
+                <ul class="list-unstyled">
+                  <li>0.085 gr en 50 ml etanol</li>
+                </ul>
+              </div>
+
+              <!-- Solución B -->
+              <div class="col-md-6">
+                <strong>Solución B (Rojo de Methyl):</strong>
+                <ul class="list-unstyled">
+                  <li>0.125 gr en 50 ml etanol</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="alert alert-info mt-3">
+              <strong>Mezcla final:</strong>
+              <p>Agregar lentamente la solución A a la B</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLORURO -->
+  <div class="card jazzmin-card">
+    <div class="card-header bg-secondary">CLORURO</div>
+    <div class="card-body">
+      <div class="card-deck">
+        <!-- Cromato de potasio -->
+        <div class="card">
+          <div class="card-header">K₂CrO₄</div>
+          <div class="card-body">
+            <p>50 gr + AgNO₃ hasta precipitado rojizo</p>
+          </div>
+        </div>
+        <!-- Nitrate de plata -->
+        <div class="card">
+          <div class="card-header">AgNO₃ 0.02N</div>
+          <div class="card-body">
+            <p>4.79 gr en 1 Lt agua</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÍNDIGO CARMÍN -->
+  <div class="card jazzmin-card">
+    <div class="card-header bg-indigo text-white">OXÍGENO DISUELTO</div>
+    <div class="card-body">
+      <div class="card">
+        <div class="card-header">Índigo Carmín</div>
+        <div class="card-body">
+          <div class="alert alert-light">
+            <strong>Mezcla:</strong>
+            <ul>
+              <li>0.057 gr índigo</li>
+              <li>0.6 gr glucosa</li>
+              <li>225 ml glicerina</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLUCIONES pH -->
+  <div class="card jazzmin-card">
+    <div class="card-header bg-light">SOLUCIONES pH</div>
+    <div class="card-body">
+      <div class="card-deck">
+        <!-- Solución pH -->
+        <div class="card">
+          <div class="card-header">Buffer pH</div>
+          <div class="card-body">
+            <p>12.369 gr H₃BO₃ + 14.91 gr KCl en 1 Lt</p>
+          </div>
+        </div>
+        <!-- Indicador pH -->
+        <div class="card">
+          <div class="card-header">Indicador universal</div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li>0.015 gr Anaranjado de metilo</li>
+              <li>0.075 gr Rojo de metilo</li>
+              <li>0.15 gr Azul de bromo timol</li>
+              <li>0.175 gr Fenolftaleína</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Estilos adicionales para integración con Jazzmin */
+  .jazzmin-card {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .jazzmin-default {
+    max-width: 1200px;
+    margin: 40px auto;
+  }
+
+  .card-deck {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .card-deck {
+      flex-direction: column;
+    }
+  }
+</style>
+
+{% endblock %}

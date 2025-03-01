@@ -8,10 +8,14 @@ from drf_spectacular.utils import (
 )
 from rest_framework import generics, serializers, status
 from rest_framework.response import Response
-
+from django.shortcuts import render
 from config.utils.utils_view import (
     BaseGenericAPIView,
     BaseListAPIView,
     BaseModelAPIView,
     BaseModelViewSet,
 )
+
+
+def soluciones_view(request):
+    return render(request, "admin/soluciones/soluciones.html")

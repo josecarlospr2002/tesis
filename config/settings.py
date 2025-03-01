@@ -190,6 +190,28 @@ JAZZMIN_SETTINGS = {
     "site_logo_classes": "",
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
+
+    # Whether to display the side menu
+    "show_sidebar": True,
+
+    # Whether to aut expand the menu
+    "navigation_expanded": True,
+
+    "custom_links": {
+        "project": [{
+            "name": "Soluciones", 
+            "url": "soluciones", 
+            "icon": "fas fa-comments",
+            # "permissions":["reportbroD.view_reportrequest"]
+        }]
+    },
+
+    # "usermenu_links": [
+    #     {"name": "Support",
+    #       "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+    #     {"model": "auth.user"}
+    # ],
+
 }
 JAZZMIN_UI_TWEAKS = {
     "theme": "default",
