@@ -1,0 +1,183 @@
+@startuml
+
+entity User{
+    id : Integer PK
+    username: CharField
+    email: CharField
+    password: CharField
+}
+
+
+
+
+
+entity EquipamientoDeLaboratorio{
+    id : Integer PK
+    nombre: CharField
+    fabricante: CharField
+    descripcion: CharField
+    estado: CharField
+    fecha_entrada: DateField
+    calibracion: FloatField
+}
+
+entity EntradaDeReactivo{
+    id : Integer PK
+    fecha_entrada: DateField
+    cantidad: FloatField
+}
+
+entity Reactivo{
+    id : Integer PK
+    nombre: CharField
+    cantidad: FloatField
+}
+
+entity PrepararSoluciones {
+    id : Integer PK
+    fecha: DateField
+}
+
+entity ReactivoConsumido {
+    id : Integer PK
+    cantidad: FloatField
+}
+entity SolucionesPreparadasProducida {
+    id : Integer PK
+    cantidad: FloatField
+}
+
+entity SolucionesPreparadas{
+    id : Integer PK
+    identifacion: CharField
+    nombre: CharField
+    cantidad: FloatField
+}
+
+entity Trabajador{
+    id : Integer PK
+    nombre: CharField
+}
+
+
+
+entity LibroDeRegistroDeOperaciones{
+    id : Integer PK
+    tipo: CharField
+}
+
+entity RegistroDeOperacion {
+    id : Integer PK
+    identifacion: CharField
+    fecha: DateField
+    descripcion: CharField
+}
+
+entity DeterminacionDeLaViscosidad {
+
+    tiempoDeInicio: datetime
+    tiempoFinal: datetime
+    viascosidad: FloatField
+
+
+    id : Integer PK
+}
+
+
+
+entity DeterminacionDeLaTemperaturaDeCalentamiento {
+    id : Integer PK
+
+    viscosidadResultante: FloatField
+    temperaturaResultante: FloatField
+}
+
+entity ViscosidadVSTemperatura{
+        id : Integer PK
+
+        viascosidad: FloatField
+        nivelDeTemp_1: FloatField
+}
+DeterminacionDeLaTemperaturaDeCalentamiento "1" -- "*" ViscosidadVSTemperatura 
+
+
+
+entity DeterminacionDelValorCaloricoSuperior {
+    id : Integer PK
+
+    
+    estaRoto : booleanField
+
+}
+
+
+entity DeterminacionDelValorCaloricoSuperior_Calorimetro {
+    id : Integer PK
+
+    temoeraturaIntroducida: FloatField
+    alorCaloricoSuperior_Resultante: FloatField
+    porCientoDeAsufre_Resultante: FloatField
+    porCientoDeHidrogeno_Resultante: FloatField
+    porCientoDeCarbono_Resultante: FloatField
+
+
+
+}
+DeterminacionDelValorCaloricoSuperior "1" -- "1" DeterminacionDelValorCaloricoSuperior_Calorimetro 
+
+
+entity DeterminacionDelValorCaloricoSuperior_Algoritmo {
+    id : Integer PK
+
+    gravedadEspecificaDelCombustible: FloatField
+    porcentajeDeAgua : FloatField
+
+     alorCaloricoSuperior_Resultante: FloatField
+
+}
+DeterminacionDelValorCaloricoSuperior "1" -- "1" DeterminacionDelValorCaloricoSuperior_Algoritmo 
+
+
+entity DeterminacionDeLaGravedadExpesifica {
+    id : Integer PK
+    
+    temperatura: FloatField
+    gravedadEspecifica_Resultante : FloatField
+    resultado_enGradoAPI: FloatField
+}
+
+
+entity Muestra {
+    id : Integer PK
+    identifacion: CharField
+    nombre: CharField
+    cantidad: FloatField
+}
+
+entity Cliente {
+    id : Integer PK
+    nombre: CharField
+}
+
+Muestra "*" -- "1" Cliente
+RegistroDeOperacion "1" -- "*" Muestra
+
+PrepararSoluciones "*" -- "*" SolucionesPreparadasProducida
+PrepararSoluciones "*" -- "*" ReactivoConsumido
+PrepararSoluciones "*" -- "1" RegistroDeOperacion
+
+ReactivoConsumido "*" -- "1" Reactivo
+SolucionesPreparadas "1" -- "*" SolucionesPreparadasProducida
+
+RegistroDeOperacion "*" -- "*" Trabajador
+LibroDeRegistroDeOperaciones "1" -- "*" RegistroDeOperacion
+
+EntradaDeReactivo "*" -- "1" Reactivo
+
+DeterminacionDeLaViscosidad "1" -- "1" RegistroDeOperacion 
+DeterminacionDeLaTemperaturaDeCalentamiento "1" -- "1" RegistroDeOperacion 
+DeterminacionDelValorCaloricoMedianteElCalorimetro "1" -- "1" RegistroDeOperacion 
+DeterminacionDeLaGravedadExpesifica "1" -- "1" RegistroDeOperacion 
+DeterminacionDelValorCaloricoSuperior "1" -- "1" RegistroDeOperacion 
+DeterminacionDeLaComposicionMetalica "1" -- "1" RegistroDeOperacion 
+@enduml
