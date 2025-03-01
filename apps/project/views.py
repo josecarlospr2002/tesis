@@ -19,3 +19,13 @@ from config.utils.utils_view import (
 
 def soluciones_view(request):
     return render(request, "admin/soluciones/soluciones.html")
+
+def capilares_view(request):
+    if request.method == "POST":
+        numero = request.POST.get('numero', None)
+        if numero is not None:
+            return render(request, "admin/soluciones/capilares.html",{
+            "numero":numero
+        })
+
+    return render(request, "admin/soluciones/capilares.html")

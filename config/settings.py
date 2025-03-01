@@ -203,6 +203,12 @@ JAZZMIN_SETTINGS = {
             "url": "soluciones", 
             "icon": "fas fa-comments",
             # "permissions":["reportbroD.view_reportrequest"]
+        },
+        {
+            "name": "Capilares", 
+            "url": "capilares", 
+            "icon": "fas fa-comments",
+            # "permissions":["reportbroD.view_reportrequest"]
         }]
     },
 
