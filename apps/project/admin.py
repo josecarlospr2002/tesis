@@ -29,21 +29,23 @@ class EquipamientoDelLaboratorioAdmin(admin.ModelAdmin):
 class ReactivoAdmin(admin.ModelAdmin):
     list_display = (
         "nombre_del_reactivo",
-        "cantidad_de_reactivo",
+        "cantidad_de_disponible",
+        "fecha_entrada",
     )
     list_filter = (
-        "cantidad_de_reactivo",
+        "cantidad_de_disponible",
 
     )
+    date_hierarchy = "fecha_entrada"
     ordering = list(list_display).copy()
     list_display_links = list(list_display).copy()
 
 @admin.register(EntradaDeReactivo)
 class EntradaDeReactivoAdmin(admin.ModelAdmin):
     list_display = (
-        "fecha_de_entrada_del_reactivo",
         "reactivo",
         "cantidad_de_reactivo",
+        "fecha_de_entrada_del_reactivo",
 
     )
     list_filter = (
@@ -77,14 +79,19 @@ class SolucionesPreparadasAdmin(admin.ModelAdmin):
 class TrabajadorAdmin(admin.ModelAdmin):
         list_display = (
             "nombre_del_trabajador",
+            "ci",
+            "rol_del_trabajador",
+        )
+        list_filter = (
+            "rol_del_trabajador",
 
         )
         search_fields = ("nombre_del_trabajador",)
         ordering = list(list_display).copy()
         list_display_links = list(list_display).copy()
 
-@admin.register(LibroDeRegistroDeOperacione)
-class LibroDeRegistroDeOperacioneAdmin(admin.ModelAdmin):
+@admin.register(LibroDeInforme)
+class LibroDeInformeAdmin(admin.ModelAdmin):
     list_display = (
         "tipo",
     )
@@ -105,6 +112,12 @@ class PrepararSolucionesAdmin(admin.ModelAdmin):
     date_hierarchy = "fecha_de_preparacion_de_la_solucion"
     ordering = list(list_display).copy()
     list_display_links = list(list_display).copy()
+    filter_horizontal = [
+        "reactivo_consumido"
+    ]
+    filter_horizontal = [
+        "soluciones_preparadas_producidas"
+    ]
 
 @admin.register(Soluciones_Preparadas_Producidas)
 class Soluciones_Preparadas_ProducidasAdmin(admin.ModelAdmin):
@@ -121,6 +134,7 @@ class Soluciones_Preparadas_ProducidasAdmin(admin.ModelAdmin):
     ordering = list(list_display).copy()
     list_display_links = list(list_display).copy()
 
+
 @admin.register(Reactivo_Consumido)
 class Reactivo_ConsumidoAdmin(admin.ModelAdmin):
     list_display = (
@@ -136,145 +150,63 @@ class Reactivo_ConsumidoAdmin(admin.ModelAdmin):
     ordering = list(list_display).copy()
     list_display_links = list(list_display).copy()
 
-@admin.register(Cliente)
-class ClienteAdmin(admin.ModelAdmin):
+
+@admin.register(EnsayoAguaVapor)
+class EnsayoAguaVaporAdmin(admin.ModelAdmin):
     list_display = (
-        "nombre_del_cliente",
-
-    )
-    search_fields = ("nombre_del_cliente",)
-    ordering = list(list_display).copy()
-    list_display_links = list(list_display).copy()
-
-@admin.register(Muestra)
-class MuestraAdmin(admin.ModelAdmin):
-    list_display = (
-        "identificador_de_la_muestra",
-        "nombre_de_la_muestra",
-        "cantidad_de_la_muestra",
-        "cliente",
-
+        "nombre_ensayo",
+        "fecha_del_ensayo",
+        "preparar_soluciones",
     )
     list_filter = (
-        "identificador_de_la_muestra",
-        "cantidad_de_la_muestra",
-        "cliente",
+        "preparar_soluciones",
 
     )
-    search_fields = ("nombre_de_la_muestrad",)
-    ordering = list(list_display).copy()
-    list_display_links = list(list_display).copy()
-
-@admin.register(DeterminacionDeLaGravedadEspecifica)
-class DeterminacionDeLaGravedadEspecificaAdmin(admin.ModelAdmin):
-    list_display = (
-        "temperatura",
-        "gravedad_especifica_resultante",
-        "resultado_en_grado_API",
-
-    )
-    list_filter = (
-        "temperatura",
-    )
-    ordering = list(list_display).copy()
-    list_display_links = list(list_display).copy()
-
-@admin.register(DeterminacionDeLaTemperaturaDeCalentamiento)
-class DeterminacionDeLaTemperaturaDeCalentamientoAdmin(admin.ModelAdmin):
-    list_display = (
-        "temperatura_resultante",
-        "viscosidad_resultante",
-
-    )
-    list_filter = (
-        "temperatura_resultante",
-        "viscosidad_resultante",
-    )
-    ordering = list(list_display).copy()
-    list_display_links = list(list_display).copy()
-
-@admin.register(DeterminacionDeLaViscosidad)
-class DeterminacionDeLaViscosidadAdmin(admin.ModelAdmin):
-    list_display = (
-        "viscosidad",
-        "tiempo_de_inicio",
-        "tiempo_de_final",
-
-    )
-    list_filter = (
-        "viscosidad",
-        "tiempo_de_inicio",
-        "tiempo_de_final",
-
-    )
-    date_hierarchy = "tiempo_de_inicio"
-    ordering = list(list_display).copy()
-    list_display_links = list(list_display).copy()
-
-@admin.register(DeterminacionDelValorCaloricoSuperior_Calorimetro)
-class DeterminacionDelValorCaloricoSuperior_CalorimetroAdmin(admin.ModelAdmin):
-    list_display = (
-        "temperatura_introducida",
-        "valor_calorico_superior_resultante",
-
-    )
-    list_filter = (
-        "temperatura_introducida",
-        "valor_calorico_superior_resultante",
-
-    )
-    ordering = list(list_display).copy()
-    list_display_links = list(list_display).copy()
-
-@admin.register(DeterminacionDelValorCaloricoSuperior_Algoritmo)
-class DeterminacionDelValorCaloricoSuperior_AlgoritmoAdmin(admin.ModelAdmin):
-    list_display = (
-        "valor_calorico_superior_resultante",
-        "gravedad_especifica_del_combustible",
-        "porcentaje_de_agua",
-
-    )
-    list_filter = (
-        "valor_calorico_superior_resultante",
-        "gravedad_especifica_del_combustible",
-        "porcentaje_de_agua",
-    )
-    ordering = list(list_display).copy()
-    list_display_links = list(list_display).copy()
-
-@admin.register(DeterminacionDelValorCaloricoSuperior)
-class DeterminacionDelValorCaloricoSuperiorAdmin(admin.ModelAdmin):
-    list_display = (
-        "esta_roto",
-        "determinacion_del_valor_calorico_superior_Calorimetro",
-        "determinacion_del_valor_calorico_superior_Calorimetro",
-
-    )
-    list_filter = (
-        "esta_roto",
-
-    )
-    ordering = list(list_display).copy()
-    list_display_links = list(list_display).copy()
-
-
-@admin.register(RegistroDeOperacion)
-class RegistroDeOperacionAdmin(admin.ModelAdmin):
-    list_display = (
-        "identificador_del_registro_de_operacion",
-        "fecha_de_registro_de_operacion",
-
-    )
-    list_filter = (
-        "fecha_de_registro_de_operacion",
-
-    )
-    date_hierarchy = "fecha_de_registro_de_operacion"
+    date_hierarchy = "fecha_del_ensayo"
     ordering = list(list_display).copy()
     list_display_links = list(list_display).copy()
     filter_horizontal = [
         "trabajador"
     ]
+
+
+    @admin.register(EnsayoDelCombustible)
+    class EnsayoDelCombustibleAdmin(admin.ModelAdmin):
+        list_display = (
+            "nombre_ensayo",
+            "fecha_del_ensayo",
+            "preparar_soluciones",
+        )
+        list_filter = (
+            "preparar_soluciones",
+        )
+        date_hierarchy = "fecha_del_ensayo"
+        ordering = list(list_display).copy()
+        list_display_links = list(list_display).copy()
+        filter_horizontal = [
+            "trabajador"
+        ]
+
+
+@admin.register(Informe)
+class InformeAdmin(admin.ModelAdmin):
+    list_display = (
+        "titulo_del_informe",
+        "fecha_del_informe",
+
+    )
+    list_filter = (
+        "trabajador",
+        "ensayo_aguavapor",
+        "ensayo_del_combustible",
+    )
+    date_hierarchy = "fecha_del_informe"
+    ordering = list(list_display).copy()
+    list_display_links = list(list_display).copy()
+    filter_horizontal = [
+        "trabajador"
+    ]
+
 
 
 
