@@ -174,12 +174,12 @@ AUTH_USER_MODEL = "users.User"
 
 JAZZMIN_SETTINGS = {
     "welcome_sign": "Bienvenido",
-    "site_title": "Administración",
-    "site_header": "Administración",
-    "site_brand": "Administración",
-    "site_logo": "img/logo.png",
-    "login_logo": "img/logo.png",
-    "login_logo_dark": "img/logo.png",
+    "site_title": ".",
+    "site_header": ".",
+    "site_brand": ".",
+    "site_logo": "img/Logo LabQuim.jpg",
+    "login_logo": "img/Logo LabQuim.jpg",
+    "login_logo_dark": "img/Logo LabQuim.jpg",
     "site_logo_classes": "",
     # Iconos para cada modelo
     "icons": {
