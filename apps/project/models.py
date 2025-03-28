@@ -3,8 +3,9 @@ from typing import Dict, List
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator
 from rest_framework import serializers
-
+from django.core.validators import RegexValidator
 
 User = get_user_model()
 
@@ -12,12 +13,21 @@ ROL_NAME_ADMIN = "admin"
 
 class EquipamientoDelLaboratorio (models.Model):
     identificador_del_equipo = models.CharField( max_length=255, verbose_name="Identidicador:",unique=True)
-    nombre_del_equipo = models.CharField(max_length=255, verbose_name="Nombre: ",)
+    nombre_del_equipo = models.CharField(
+        max_length=255,
+        verbose_name="Nombre: ",
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-Z0-9_]+$',
+                message='El nombre del equipo no puede contener carateres especiales'
+            )
+        ]
+    )
     fabricante_del_equipo = models.CharField(max_length=255, verbose_name="Fabricante:")
     descripicion_del_equipo = models.CharField(max_length=255, verbose_name="Descripción del equipo:")
     estado_del_equipo = models.CharField(max_length=255, choices=(("Roto","Roto"),("En uso","En uso")), verbose_name="Estado del equipo:")
     fecha_de_entrada_del_equipo_al_laboratorio = models.DateField(verbose_name="Fecha de entrada:")
-    calibracion_del_equipo= models.FloatField(verbose_name= "Calibración:")
+    calibracion_del_equipo= models.FloatField(verbose_name= "Calibración:", validators=[MinValueValidator(0.0)])
 
     class Meta:
         verbose_name= "Equipamientos"
@@ -28,7 +38,7 @@ class EquipamientoDelLaboratorio (models.Model):
 
 class Reactivo (models.Model):
     nombre_del_reactivo = models.CharField(max_length=255, verbose_name="Nombre del reactivo:")
-    cantidad_de_disponible = models.FloatField(verbose_name= "Cantidad de reactivo:")
+    cantidad_de_disponible = models.FloatField(verbose_name= "Cantidad de reactivo:", validators=[MinValueValidator(0.0)])
     fecha_entrada = models.DateField(verbose_name="Fecha")
     descripicion = models.CharField(max_length=255, verbose_name="Descripción del reactivo")
 
@@ -42,7 +52,7 @@ class Reactivo (models.Model):
 
 class EntradaDeReactivo (models.Model):
     fecha_de_entrada_del_reactivo = models.DateField(verbose_name="Fecha de entrada:")
-    cantidad_de_reactivo= models.FloatField(verbose_name= "Cantidad de reactivo:")
+    cantidad_de_reactivo= models.FloatField(verbose_name= "Cantidad de reactivo:", validators=[MinValueValidator(0.0)])
     reactivo = models.ForeignKey(
         Reactivo,
         on_delete=models.CASCADE,
@@ -60,7 +70,7 @@ class EntradaDeReactivo (models.Model):
 class SolucionesPreparadas(models.Model):
     identificador_de_la_solucion_preparada = models.CharField( max_length=255, verbose_name="Identidicador:")
     nombre_de_la_solucion_preparada = models.CharField(max_length=255, verbose_name="Nombre de la Sol. Prep:")
-    cantidad_de_la_solucion_preparada= models.FloatField(verbose_name= "Cantidad de Sol. Prep:")
+    cantidad_de_la_solucion_preparada= models.FloatField(verbose_name= "Cantidad de Sol. Prep:", validators=[MinValueValidator(0.0)])
 
     class Meta:
         verbose_name = "Solución preparada"
@@ -94,7 +104,7 @@ class LibroDeInforme (models.Model):
             return f"{self.tipo}"
 
 class Reactivo_Consumido (models.Model):
-    cantidad_de_reactivo_consumida = models.FloatField(verbose_name= "Cantidad de React. Consumida:")
+    cantidad_de_reactivo_consumida = models.FloatField(verbose_name= "Cantidad de React. Consumida:", validators=[MinValueValidator(0.0)])
 
     reactivo = models.ForeignKey(
         Reactivo,
@@ -109,7 +119,7 @@ class Reactivo_Consumido (models.Model):
         return f"{self.reactivo}{self.cantidad_de_reactivo_consumida}"
 
 class Soluciones_Preparadas_Producidas(models.Model):
-    cantidad_de_soluciones_preparada_producidas = models.FloatField(verbose_name= "Cantidad Sol. Prep. Producida:")
+    cantidad_de_soluciones_preparada_producidas = models.FloatField(verbose_name= "Cantidad Sol. Prep. Producida:", validators=[MinValueValidator(0.0)])
 
     soluciones_preparadas = models.ForeignKey(
         SolucionesPreparadas,
@@ -164,10 +174,10 @@ class EnsayoAguaVapor (models.Model):
 
 class EnsayoDelCombustible (models.Model):
     nombre_ensayo = models.CharField( max_length=255, verbose_name="Nombre del ensayo:")
-    result_determinacion_de_la_viscosidad = models.FloatField(verbose_name="Resultado de la viscosidad")
-    result_determinacion_de_la_temperatura_de_calentamiento = models.FloatField(verbose_name="Resultado de la Temp. de calentamiento")
-    result_determinacion_del_valor_calorico = models.FloatField(verbose_name="Resultado del valor calórico")
-    result_determinacion_de_la_gravedad_especifica = models.FloatField(verbose_name="Resultado de la gravedad específica")
+    result_determinacion_de_la_viscosidad = models.FloatField(verbose_name="Resultado de la viscosidad", validators=[MinValueValidator(0.0)])
+    result_determinacion_de_la_temperatura_de_calentamiento = models.FloatField(verbose_name="Resultado de la Temp. de calentamiento", validators=[MinValueValidator(0.0)])
+    result_determinacion_del_valor_calorico = models.FloatField(verbose_name="Resultado del valor calórico", validators=[MinValueValidator(0.0)])
+    result_determinacion_de_la_gravedad_especifica = models.FloatField(verbose_name="Resultado de la gravedad específica", validators=[MinValueValidator(0.0)])
     fecha_del_ensayo = models.DateTimeField(verbose_name="Fecha del ensayo:")
     descripicion_del_resultado = models.TextField(verbose_name= "Descripción del resultado")
     trabajador = models.ManyToManyField(Trabajador, verbose_name="Trabajador")
