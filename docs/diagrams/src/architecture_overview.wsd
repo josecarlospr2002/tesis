@@ -63,10 +63,6 @@ entity Trabajador{
     rol_del_trabajador: CharField
 }
 
-entity LibroDeRegistroDeOperaciones{
-    id : Integer PK
-    tipo: CharField
-}
 
 entity Informe {
     id : Integer PK
@@ -109,7 +105,7 @@ SolucionesPreparadas "1" -- "*" SolucionesPreparadasProducida
 Informe "1" -- "1" EnsayoDelCombustible
 Informe "1" -- "1" EnsayoAguaVapor
 Informe "*" -- "*" Trabajador
-LibroDeRegistroDeOperaciones "1" -- "*" Informe
+
 
 EntradaDeReactivo "*" -- "1" Reactivo
 

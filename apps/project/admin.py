@@ -104,12 +104,10 @@ class PrepararSolucionesAdmin(admin.ModelAdmin):
     date_hierarchy = "fecha_de_preparacion_de_la_solucion"
     ordering = list(list_display).copy()
     list_display_links = list(list_display).copy()
-    filter_horizontal = [
-        "reactivo_consumido"
-    ]
-    filter_horizontal = [
-        "soluciones_preparadas_producidas"
-    ]
+    # filter_horizontal = [
+    #     "reactivo_consumido","soluciones_preparadas_producidas"
+    # ]
+    
 
 @admin.register(Soluciones_Preparadas_Producidas)
 class Soluciones_Preparadas_ProducidasAdmin(admin.ModelAdmin):
@@ -148,17 +146,17 @@ class EnsayoAguaVaporAdmin(admin.ModelAdmin):
     list_display = (
         "nombre_ensayo",
         "fecha_del_ensayo",
-        "preparar_soluciones",
     )
     list_filter = (
-        "preparar_soluciones",
+        "nombre_ensayo",
 
     )
     date_hierarchy = "fecha_del_ensayo"
     ordering = list(list_display).copy()
     list_display_links = list(list_display).copy()
     filter_horizontal = [
-        "trabajador"
+        "trabajador",
+        "preparar_soluciones",
     ]
 
 
@@ -167,16 +165,17 @@ class EnsayoAguaVaporAdmin(admin.ModelAdmin):
         list_display = (
             "nombre_ensayo",
             "fecha_del_ensayo",
-            "preparar_soluciones",
+
         )
         list_filter = (
-            "preparar_soluciones",
+            "nombre_ensayo",
         )
         date_hierarchy = "fecha_del_ensayo"
         ordering = list(list_display).copy()
         list_display_links = list(list_display).copy()
         filter_horizontal = [
-            "trabajador"
+            "trabajador",
+            "preparar_soluciones",
         ]
 
 

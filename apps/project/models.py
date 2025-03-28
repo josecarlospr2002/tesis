@@ -138,27 +138,28 @@ class Reactivo_Consumido (models.Model):
         return f"{self.reactivo}{self.cantidad_de_reactivo_consumida}"
 
 class Soluciones_Preparadas_Producidas(models.Model):
-    cantidad_de_soluciones_preparada_producidas = models.FloatField(verbose_name= "Cantidad Sol. Prep. Producida:", validators=[MinValueValidator(0.0)])
 
     soluciones_preparadas = models.ForeignKey(
         SolucionesPreparadas,
         on_delete=models.CASCADE,
         verbose_name="Soluciones preparadas",
     )
+    cantidad_de_soluciones_preparada_producidas = models.FloatField(verbose_name= "Cantidad Sol. Prep. Producida:", validators=[MinValueValidator(0.0)])
+
     class Meta:
-        verbose_name = "Solución prep. producida"
+        verbose_name = "Solución preparada producida"
         verbose_name_plural = "Soluciones preparadas producidas"
 
     def __str__(self):
-            return f"{self.soluciones_preparadas}{self.cantidad_de_soluciones_preparada_producidas}"
+            return f"{self.soluciones_preparadas.nombre_de_la_solucion_preparada}{self.cantidad_de_soluciones_preparada_producidas}"
 
 
 
 
 class PrepararSoluciones(models.Model):
     fecha_de_preparacion_de_la_solucion = models.DateTimeField(verbose_name="Fecha de Prep. de la Sol.:")
-    reactivo_consumido = models.ManyToManyField(Reactivo_Consumido, verbose_name="Preparar soluciones")
-    soluciones_preparadas_producidas = models.ManyToManyField(Soluciones_Preparadas_Producidas, verbose_name="???")
+    reactivo_consumido = models.ManyToManyField(Reactivo_Consumido, verbose_name="Reactivo consumido")
+    soluciones_preparadas_producidas = models.ManyToManyField(Soluciones_Preparadas_Producidas, verbose_name="Soluciones preparadas producidas")
 
 
     class Meta:
@@ -166,23 +167,21 @@ class PrepararSoluciones(models.Model):
         verbose_name_plural = "Preparar soluciones"
 
     def __str__(self):
-            return f"{self.fecha_de_preparacion_de_la_solucion}"
-
-
+            soluciones=[
+                f"{solucion.soluciones_preparadas.nombre_de_la_solucion_preparada}"
+                for solucion in self.soluciones_preparadas_producidas.all()
+                ]
+            return f"{' : '.join(soluciones)}"
 
 
 class EnsayoAguaVapor (models.Model):
     nombre_ensayo = models.CharField( max_length=255, verbose_name="Nombre del ensayo:")
     fecha_del_ensayo = models.DateTimeField(verbose_name="Fecha del ensayo:")
-    descripicion_del_ensayo = models.TextField(verbose_name= "Descripción del ensayo")
+   
     trabajador = models.ManyToManyField(Trabajador, verbose_name="Trabajador")
-
-    preparar_soluciones = models.ForeignKey(
-        PrepararSoluciones,
-        on_delete=models.CASCADE,
-        verbose_name="Preparar soluciones",
-    )
-
+    
+    preparar_soluciones = models.ManyToManyField(PrepararSoluciones, verbose_name= "Soluciones preparadas para este ensaayo")
+    descripicion_del_ensayo = models.TextField(verbose_name= "Descripción del ensayo", blank=True, null=True)
 
     class Meta:
         verbose_name = "Ensayo Agua-Vapor"
@@ -191,21 +190,20 @@ class EnsayoAguaVapor (models.Model):
     def __str__(self):
         return f"{self.nombre_ensayo}"
 
+
 class EnsayoDelCombustible (models.Model):
     nombre_ensayo = models.CharField( max_length=255, verbose_name="Nombre del ensayo:")
+    fecha_del_ensayo = models.DateTimeField(verbose_name="Fecha del ensayo:")
     result_determinacion_de_la_viscosidad = models.FloatField(verbose_name="Resultado de la viscosidad", validators=[MinValueValidator(0.0)])
     result_determinacion_de_la_temperatura_de_calentamiento = models.FloatField(verbose_name="Resultado de la Temp. de calentamiento", validators=[MinValueValidator(0.0)])
     result_determinacion_del_valor_calorico = models.FloatField(verbose_name="Resultado del valor calórico", validators=[MinValueValidator(0.0)])
     result_determinacion_de_la_gravedad_especifica = models.FloatField(verbose_name="Resultado de la gravedad específica", validators=[MinValueValidator(0.0)])
-    fecha_del_ensayo = models.DateTimeField(verbose_name="Fecha del ensayo:")
-    descripicion_del_resultado = models.TextField(verbose_name= "Descripción del resultado")
+   
     trabajador = models.ManyToManyField(Trabajador, verbose_name="Trabajador")
+    preparar_soluciones = models.ManyToManyField(PrepararSoluciones, verbose_name= "Soluciones preparadas para este ensaayo")
 
-    preparar_soluciones = models.ForeignKey(
-        PrepararSoluciones,
-        on_delete=models.CASCADE,
-        verbose_name="Preparar soluciones",
-    )
+    descripicion_del_resultado = models.TextField(verbose_name= "Descripción del resultado", blank=True, null=True)
+
 
     class Meta:
         verbose_name = "Ensayo del Combustible"
