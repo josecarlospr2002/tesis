@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator
 from rest_framework import serializers
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
@@ -26,12 +27,13 @@ class EquipamientoDelLaboratorio (models.Model):
     fabricante_del_equipo = models.CharField(max_length=255, verbose_name="Fabricante:")
     fecha_de_entrada_del_equipo_al_laboratorio = models.DateField(verbose_name="Fecha de entrada:")
     estado_del_equipo = models.CharField(max_length=255, choices=(("Roto","Roto"),("En uso","En uso")), verbose_name="Estado del equipo:")
+    cantidad_actual = models.IntegerField(verbose_name="Cantidad actual:", validators=[MinValueValidator(0)],  blank=True, null=True)
     calibracion_del_equipo= models.FloatField(verbose_name= "Calibración:", validators=[MinValueValidator(0.0)])
     descripicion_del_equipo = models.TextField(verbose_name="Descripción del equipo:")
 
     class Meta:
-        verbose_name= "Equipamientos"
-        verbose_name_plural = "Equipamientos"
+        verbose_name= "Equipamiento del laboratorio"
+        verbose_name_plural = "Equipamientos del laboratorio"
 
     def __str__(self):
         return f"{self.nombre_del_equipo} {self.identificador_del_equipo}"
@@ -216,16 +218,9 @@ class EnsayoDelCombustible (models.Model):
 class Informe (models.Model):
     titulo_del_informe= models.CharField( max_length=255, verbose_name="Título del informe:")
     fecha_del_informe = models.DateTimeField(verbose_name="Fecha del informe:")
-    descripicion_del_informe = models.TextField(verbose_name= "Descripción del informe")
+    
     trabajador = models.ManyToManyField(Trabajador, verbose_name="Trabajador")
-
-    preparar_soluciones = models.ForeignKey(
-        PrepararSoluciones,
-        on_delete=models.SET_NULL,
-        verbose_name="Preparar Soluciones",
-        blank=True,
-        null=True
-    )
+    preparar_soluciones = models.ManyToManyField(PrepararSoluciones, verbose_name= "Soluciones preparadas para este ensaayo")
 
     ensayo_aguavapor = models.ForeignKey(
         EnsayoAguaVapor,
@@ -243,6 +238,12 @@ class Informe (models.Model):
         null=True
     )
 
+    descripicion_del_informe = models.TextField(verbose_name= "Descripción del informe", blank=True, null=True)
+
+    def clean(self):
+        if not self.ensayo_aguavapor and not self.ensayo_del_combustible:
+            raise ValidationError("Debe seleccionar al menos un tipo de ensayo (Agua-Vapor o Combustible)")
+        return super().clean()
 
     class Meta:
         verbose_name = "Informe"

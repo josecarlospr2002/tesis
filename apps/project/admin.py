@@ -195,7 +195,8 @@ class InformeAdmin(admin.ModelAdmin):
     ordering = list(list_display).copy()
     list_display_links = list(list_display).copy()
     filter_horizontal = [
-        "trabajador"
+        "trabajador",
+        "preparar_soluciones",
     ]
 
 
