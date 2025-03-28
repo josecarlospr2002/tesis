@@ -18,16 +18,16 @@ class EquipamientoDelLaboratorio (models.Model):
         verbose_name="Nombre: ",
         validators=[
             RegexValidator(
-                regex=r'^[a-zA-Z0-9_]+$',
+                regex=r'^[a-zA-Z0-9_ ]+$',
                 message='El nombre del equipo no puede contener carateres especiales'
             )
         ]
     )
     fabricante_del_equipo = models.CharField(max_length=255, verbose_name="Fabricante:")
-    descripicion_del_equipo = models.CharField(max_length=255, verbose_name="Descripción del equipo:")
-    estado_del_equipo = models.CharField(max_length=255, choices=(("Roto","Roto"),("En uso","En uso")), verbose_name="Estado del equipo:")
     fecha_de_entrada_del_equipo_al_laboratorio = models.DateField(verbose_name="Fecha de entrada:")
+    estado_del_equipo = models.CharField(max_length=255, choices=(("Roto","Roto"),("En uso","En uso")), verbose_name="Estado del equipo:")
     calibracion_del_equipo= models.FloatField(verbose_name= "Calibración:", validators=[MinValueValidator(0.0)])
+    descripicion_del_equipo = models.TextField(verbose_name="Descripción del equipo:")
 
     class Meta:
         verbose_name= "Equipamientos"
@@ -40,7 +40,7 @@ class Reactivo (models.Model):
     nombre_del_reactivo = models.CharField(max_length=255, verbose_name="Nombre del reactivo:")
     cantidad_de_disponible = models.FloatField(verbose_name= "Cantidad de reactivo:", validators=[MinValueValidator(0.0)])
     fecha_entrada = models.DateField(verbose_name="Fecha")
-    descripicion = models.CharField(max_length=255, verbose_name="Descripción del reactivo")
+    descripicion_del_reactivo = models.TextField(verbose_name="Descripción del reactivo:")
 
 
     class Meta:
@@ -80,10 +80,36 @@ class SolucionesPreparadas(models.Model):
             return f"{self.nombre_de_la_solucion_preparada}{self.identificador_de_la_solucion_preparada}"
 
 class Trabajador(models.Model):
-    nombre_del_trabajador = models.CharField(max_length=255, verbose_name="Nombre del trabajador:")
-    ci = models.CharField(max_length=255, verbose_name="Carné de indentidad: ")
-    rol_del_trabajador = models.CharField(max_length=255, verbose_name="Rol del trabajador: ")
-
+    nombre_apellido = models.CharField(
+        max_length=255,
+        verbose_name="Nombre del trabajador:",
+        validators=[
+            RegexValidator(
+                regex=r'^[A-Z][a-zñÑáéíóúÁÉÍÓÚ]*(?:\s[A-Z][a-zñÑáéíóúÁÉÍÓÚ]*)*$',
+                message='El nombre y los apellidos deben comenzar con mayúscula, este campo solo puede contener letras'
+            )
+        ]
+    )
+    ci = models.CharField(
+        max_length=11,
+        verbose_name="Carné de identidad:",
+        validators=[
+            RegexValidator(
+                regex=r'^\d{11}$',
+                message='El carné de identidad debe contener exactamente 11 números y no contiene ningún carácter especial'
+            )
+        ]
+    )
+    rol_del_trabajador = models.CharField(
+        max_length=255,
+        verbose_name="Ocupación o cargo: ",
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$',
+                message='Este campo solo puede contener letras'
+            )
+        ]
+    )
 
 
     class Meta:
@@ -91,26 +117,19 @@ class Trabajador(models.Model):
         verbose_name_plural = "Trabajadores"
 
     def __str__(self):
-            return f"{self.nombre_del_trabajador}"
+            return f"{self.nombre_apellido}"
 
-class LibroDeInforme (models.Model):
-    tipo = models.CharField(max_length=255, verbose_name="Tipo:")
 
-    class Meta:
-        verbose_name = "Libro de Informe"
-        verbose_name_plural = "Libros de Informes"
-
-    def __str__(self):
-            return f"{self.tipo}"
 
 class Reactivo_Consumido (models.Model):
-    cantidad_de_reactivo_consumida = models.FloatField(verbose_name= "Cantidad de React. Consumida:", validators=[MinValueValidator(0.0)])
 
     reactivo = models.ForeignKey(
         Reactivo,
         on_delete=models.CASCADE,
         verbose_name="Reactivo",
-    )
+    ) 
+    cantidad_de_reactivo_consumida = models.FloatField(verbose_name= "Cantidad de React. Consumida:", validators=[MinValueValidator(0.0)])
+
     class Meta:
         verbose_name = "Reactivo consumido"
         verbose_name_plural = "Reactivos consumidos"
@@ -226,11 +245,6 @@ class Informe (models.Model):
         null=True
     )
 
-    libroDeInforme = models.ForeignKey(
-        LibroDeInforme,
-        on_delete=models.CASCADE,
-        verbose_name="Libro de Informe",
-    )
 
     class Meta:
         verbose_name = "Informe"

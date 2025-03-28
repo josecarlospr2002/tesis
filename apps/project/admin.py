@@ -78,7 +78,7 @@ class SolucionesPreparadasAdmin(admin.ModelAdmin):
 @admin.register(Trabajador)
 class TrabajadorAdmin(admin.ModelAdmin):
         list_display = (
-            "nombre_del_trabajador",
+            "nombre_apellido",
             "ci",
             "rol_del_trabajador",
         )
@@ -86,18 +86,10 @@ class TrabajadorAdmin(admin.ModelAdmin):
             "rol_del_trabajador",
 
         )
-        search_fields = ("nombre_del_trabajador",)
+        search_fields = ("nombre_apellido",)
         ordering = list(list_display).copy()
         list_display_links = list(list_display).copy()
 
-@admin.register(LibroDeInforme)
-class LibroDeInformeAdmin(admin.ModelAdmin):
-    list_display = (
-        "tipo",
-    )
-    search_fields = ("tipo",)
-    ordering = list(list_display).copy()
-    list_display_links = list(list_display).copy()
 
 @admin.register(PrepararSoluciones)
 class PrepararSolucionesAdmin(admin.ModelAdmin):
