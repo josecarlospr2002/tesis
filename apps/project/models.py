@@ -11,6 +11,10 @@ from django.core.exceptions import ValidationError
 User = get_user_model()
 
 ROL_NAME_ADMIN = "admin"
+ROL_NAME_DIRECT = "director"
+ROL_NAME_TRABAJ = "trabajador"
+ROL_NAME_USER = "ususario"
+
 
 class EquipamientoDelLaboratorio (models.Model):
     identificador_del_equipo = models.CharField( max_length=255, verbose_name="Identidicador:",unique=True)
