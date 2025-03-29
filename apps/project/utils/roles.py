@@ -63,7 +63,6 @@ def crear_roles_django_default():
             Reactivo,
             EntradaDeReactivo,
             SolucionesPreparadas,
-            Trabajador,
             Reactivo_Consumido,
             Soluciones_Preparadas_Producidas,
             PrepararSoluciones,
@@ -79,6 +78,15 @@ def crear_roles_django_default():
             EnsayoDelCombustible,
             Informe
 
+        ],
+        lista_modelos_solo_view=[
+            EquipamientoDelLaboratorio,
+            Reactivo,
+            EntradaDeReactivo,
+            SolucionesPreparadas,
+            Reactivo_Consumido,
+            Soluciones_Preparadas_Producidas,
+            PrepararSoluciones,
         ],
         nombre_rol=ROL_NAME_DIRECT,
     )
