@@ -1,0 +1,199 @@
+{% extends "admin/base_site.html" %}
+{% load i18n jazzmin admin_filters %}
+{% get_jazzmin_settings request as jazzmin_settings %}
+
+{% block content %}
+<div class="row">
+    <!-- Ensayos e Informe Section -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-flask"></i> Ensayos e Informe
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-tint"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/ensayoaguavapor/" class="info-box-text">Ensayo Agua Vapor</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-fire"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/ensayodelcombustible/" class="info-box-text">Ensayo Del Combustible</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-file-alt"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/informe/" class="info-box-text">Informe</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trabajo con reactivos Section -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-vial"></i> Trabajo con reactivos
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-flask"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/reactivo/" class="info-box-text">Reactivo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-plus-circle"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/entradedereactivo/" class="info-box-text">Entrada De Reactivo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-minus-circle"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/reactivo_consumido/" class="info-box-text">Reactivo Consumido</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Soluciones Section -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-flask"></i> Soluciones
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-mortar-pestle"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/prepararsoluciones/" class="info-box-text">Preparar Soluciones</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-flask-vial"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/soluciones_preparadas_producidas/" class="info-box-text">Soluciones Preparadas Producidas</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-vial"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/solucionespreparadas/" class="info-box-text">Soluciones Preparadas</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Links -->
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-comments"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/soluciones/" class="info-box-text">Soluciones</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-comments"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/capilares/" class="info-box-text">Capilares</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Other Models -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-cogs"></i> Otros
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-warehouse"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/equipamientodellaboratorio/" class="info-box-text">Equipamiento Del Laboratorio</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/admin/project/trabajador/" class="info-box-text">Trabajador</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
