@@ -95,7 +95,15 @@ class TrabajadorAdmin(admin.ModelAdmin):
 
 @admin.register(PrepararSoluciones)
 class PrepararSolucionesAdmin(admin.ModelAdmin):
+
+    def get_soluciones(self, obj):
+        preparar_solucion = [f"{soluciones.soluciones_preparadas.nombre_de_la_solucion_preparada} | {soluciones.cantidad_de_soluciones_preparada_producidas}" for soluciones in obj.soluciones_preparadas_producidas.all()]
+        return mark_safe("<br>\n".join(preparar_solucion))
+
+    get_soluciones.short_description = "Solución/nes y Cantidad"  
+
     list_display = (
+        "get_soluciones",
         "fecha_de_preparacion_de_la_solucion",
 
     )
@@ -104,7 +112,9 @@ class PrepararSolucionesAdmin(admin.ModelAdmin):
 
     )
     date_hierarchy = "fecha_de_preparacion_de_la_solucion"
-    ordering = list(list_display).copy()
+    ordering = (
+         "fecha_de_preparacion_de_la_solucion",
+    )
     list_display_links = list(list_display).copy()
     # filter_horizontal = [
     #     "reactivo_consumido","soluciones_preparadas_producidas"
@@ -173,15 +183,6 @@ class EnsayoAguaVaporAdmin(admin.ModelAdmin):
         "preparar_soluciones",
     ]
 
-# @admin.register(Cuadro)
-# class CuadroAdmin(admin.ModelAdmin):
-#     def get_cargos_sin_cubrir(self, obj):
-#         cargos = [cargo.cargo for cargo in obj.cargosincubrir_set.all()]
-#         return mark_safe("<br>\n".join(cargos))
-
-#     get_cargos_sin_cubrir.short_description = "Cargos sin Cubrir"
-
-#     list_display = ("empresa", "aprobada", "cubierta", "get_cargos_sin_cubrir")
 
 @admin.register(EnsayoDelCombustible)
 class EnsayoDelCombustibleAdmin(admin.ModelAdmin):

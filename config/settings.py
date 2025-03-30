@@ -174,6 +174,23 @@ AUTH_USER_MODEL = "users.User"
 
 JAZZMIN_SETTINGS = {
     "welcome_sign": "Bienvenido",
+    "topmenu_links": [
+        # Url that gets reversed (Permissions can be added)
+        {
+            "name": "Plantillas Reportes",
+            "url": "/reportbroD",
+            "permissions": [
+                "reportbroD.view_reportrequest",
+                "reportbroD.delete_reportrequest",
+                "reportbroD.change_reportrequest",
+                "reportbroD.add_reportrequest",
+                "reportbroD.view_reportdefinition",
+                "reportbroD.delete_reportdefinition",
+                "reportbroD.change_reportdefinition",
+                "reportbroD.add_reportdefinition",
+            ],
+        },
+    ],
     "site_title": "Labquim",
     "site_header": "Labquim",
     "site_brand": "Labquim",
