@@ -128,7 +128,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    {% if perms.project.view_prepararsoluciones or perms.project.view_soluciones_preparadas_producidas or perms.project.view_solucionespreparadas %}
+                    
                     {% if perms.project.view_prepararsoluciones %}
                     <div class="col-md-12">
                         <div class="info-box">
@@ -157,7 +157,7 @@
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
-                                <i class="fas fa-vial"></i>
+                                <i class="fas fa-flask"></i>
                             </span>
                             <div class="info-box-content">
                                 <a href="/admin/project/solucionespreparadas/" class="info-box-text">Soluciones Preparadas</a>
@@ -165,11 +165,18 @@
                         </div>
                     </div>
                     {% endif %}
-                    {% else %}
                     <div class="col-md-12">
-                        <p class="text-muted text-center">No tienes acceso a esta sección.</p>
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-comments"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="{% url 'soluciones' %}" class="info-box-text">Soluciones</a>
+                            </div>
+                        </div>
                     </div>
-                    {% endif %}
+                    
+                    
                 </div>
             </div>
         </div>
@@ -185,7 +192,6 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    {% if perms.project.view_equipamientodellaboratorio or perms.project.view_trabajador or perms.project.view_capilares %}
                     {% if perms.project.view_equipamientodellaboratorio %}
                     <div class="col-md-12">
                         <div class="info-box">
@@ -222,11 +228,16 @@
                         </div>
                     </div>
                     {% endif %}
-                    {% else %}
                     <div class="col-md-12">
-                        <p class="text-muted text-center">No tienes acceso a esta sección.</p>
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-comments"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="{% url 'capilares' %}" class="info-box-text">Capilares</a>
+                            </div>
+                        </div>
                     </div>
-                    {% endif %}
                 </div>
             </div>
         </div>
