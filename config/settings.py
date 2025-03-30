@@ -192,19 +192,20 @@ JAZZMIN_SETTINGS = {
         "project.EnsayoAguaVapor": "fas fa-tint",  # Icono de gota para ensayos de agua
         "project.EnsayoDelCombustible": "fas fa-fire",  # Icono de fuego para ensayos de combustible
         "project.Informe": "fas fa-file-alt",  # Icono de documento para informes
+        "project.Soluciones_Preparadas_Producidas": "fas fa-fill-drip",  # Icono de líquido goteando
         "users.User": "fas fa-users",  # Icono de usuarios para el modelo de usuarios
     },
     "custom_links": {
         "project": [{
             "name": "Soluciones", 
             "url": "soluciones", 
-            "icon": "fas fa-comments",
+            "icon": "fas fa-eye-dropper",  # Cambiado a gotero
             # "permissions":["reportbroD.view_reportrequest"]
         },
         {
             "name": "Capilares", 
             "url": "capilares", 
-            "icon": "fas fa-comments",
+            "icon": "fas fa-thermometer-half",  # Cambiado a termómetro
             # "permissions":["reportbroD.view_reportrequest"]
         }]
     },
