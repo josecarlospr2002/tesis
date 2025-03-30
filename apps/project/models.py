@@ -3,32 +3,51 @@ from typing import Dict, List
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator
 from rest_framework import serializers
-
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
 ROL_NAME_ADMIN = "admin"
+ROL_NAME_DIRECT = "director"
+ROL_NAME_TRABAJ = "trabajador"
+ROL_NAME_USER = "ususario"
+
 
 class EquipamientoDelLaboratorio (models.Model):
-    identificador_del_equipo = models.CharField( max_length=255, verbose_name="Identidicador:")
-    nombre_del_equipo = models.CharField(max_length=255, verbose_name="Nombre: ")
+    identificador_del_equipo = models.CharField( max_length=255, verbose_name="Identidicador:",unique=True)
+    nombre_del_equipo = models.CharField(
+        max_length=255,
+        verbose_name="Nombre: ",
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-Z0-9_ ]+$',
+                message='El nombre del equipo no puede contener carateres especiales'
+            )
+        ]
+    )
     fabricante_del_equipo = models.CharField(max_length=255, verbose_name="Fabricante:")
-    descripicion_del_equipo = models.CharField(max_length=255, verbose_name="Descripción del equipo:")
-    estado_del_equipo = models.CharField(max_length=255, choices=(("Roto","Roto"),("En uso","En uso")), verbose_name="Estado del equipo:")
     fecha_de_entrada_del_equipo_al_laboratorio = models.DateField(verbose_name="Fecha de entrada:")
-    calibracion_del_equipo= models.FloatField(verbose_name= "Calibración:")
+    estado_del_equipo = models.CharField(max_length=255, choices=(("Roto","Roto"),("En uso","En uso")), verbose_name="Estado del equipo:")
+    cantidad_actual = models.IntegerField(verbose_name="Cantidad actual:", validators=[MinValueValidator(0)],  blank=True, null=True)
+    calibracion_del_equipo= models.FloatField(verbose_name= "Calibración:", validators=[MinValueValidator(0.0)])
+    descripicion_del_equipo = models.TextField(verbose_name="Descripción del equipo:")
 
     class Meta:
-        verbose_name= "Equipamientos"
-        verbose_name_plural = "Equipamientos"
+        verbose_name= "Equipamiento del laboratorio"
+        verbose_name_plural = "Equipamientos del laboratorio"
 
     def __str__(self):
         return f"{self.nombre_del_equipo} {self.identificador_del_equipo}"
 
 class Reactivo (models.Model):
     nombre_del_reactivo = models.CharField(max_length=255, verbose_name="Nombre del reactivo:")
-    cantidad_de_reactivo = models.FloatField(verbose_name= "Cantidad de reactivo:")
+    cantidad_de_disponible = models.FloatField(verbose_name= "Cantidad de reactivo:", validators=[MinValueValidator(0.0)])
+    fecha_entrada = models.DateField(verbose_name="Fecha")
+    descripicion_del_reactivo = models.TextField(verbose_name="Descripción del reactivo:")
+
 
     class Meta:
         verbose_name = "Reactivo"
@@ -39,7 +58,7 @@ class Reactivo (models.Model):
 
 class EntradaDeReactivo (models.Model):
     fecha_de_entrada_del_reactivo = models.DateField(verbose_name="Fecha de entrada:")
-    cantidad_de_reactivo= models.FloatField(verbose_name= "Cantidad de reactivo:")
+    cantidad_de_reactivo= models.FloatField(verbose_name= "Cantidad de reactivo:", validators=[MinValueValidator(0.0)])
     reactivo = models.ForeignKey(
         Reactivo,
         on_delete=models.CASCADE,
@@ -57,7 +76,7 @@ class EntradaDeReactivo (models.Model):
 class SolucionesPreparadas(models.Model):
     identificador_de_la_solucion_preparada = models.CharField( max_length=255, verbose_name="Identidicador:")
     nombre_de_la_solucion_preparada = models.CharField(max_length=255, verbose_name="Nombre de la Sol. Prep:")
-    cantidad_de_la_solucion_preparada= models.FloatField(verbose_name= "Cantidad de Sol. Prep:")
+    cantidad_de_la_solucion_preparada= models.FloatField(verbose_name= "Cantidad de Sol. Prep:", validators=[MinValueValidator(0.0)])
 
     class Meta:
         verbose_name = "Solución preparada"
@@ -67,259 +86,210 @@ class SolucionesPreparadas(models.Model):
             return f"{self.nombre_de_la_solucion_preparada}{self.identificador_de_la_solucion_preparada}"
 
 class Trabajador(models.Model):
-    nombre_del_trabajador = models.CharField(max_length=255, verbose_name="Nombre del trabajador:")
+    nombre_apellido = models.CharField(
+        max_length=255,
+        verbose_name="Nombre del trabajador:",
+        validators=[
+            RegexValidator(
+                regex=r'^[A-Z][a-zñÑáéíóúÁÉÍÓÚ]*(?:\s[A-Z][a-zñÑáéíóúÁÉÍÓÚ]*)*$',
+                message='El nombre y los apellidos deben comenzar con mayúscula, este campo solo puede contener letras'
+            )
+        ]
+    )
+    ci = models.CharField(
+        max_length=11,
+        verbose_name="Carné de identidad:",
+        validators=[
+            RegexValidator(
+                regex=r'^\d{11}$',
+                message='El carné de identidad debe contener exactamente 11 números y no contiene ningún carácter especial'
+            )
+        ]
+    )
+    rol_del_trabajador = models.CharField(
+        max_length=255,
+        verbose_name="Ocupación o cargo: ",
+        validators=[
+            RegexValidator(
+                regex=r'^[a-zA-ZñÑáéíóúÁÉÍÓÚ ]+$',
+                message='Este campo solo puede contener letras'
+            )
+        ]
+    )
+
 
     class Meta:
         verbose_name = "Trabajador"
         verbose_name_plural = "Trabajadores"
 
     def __str__(self):
-            return f"{self.nombre_del_trabajador}"
+            return f"{self.nombre_apellido}"
 
-class LibroDeRegistroDeOperacione (models.Model):
-    tipo = models.CharField(max_length=255, verbose_name="Tipo:")
+
+
+class Reactivo_Consumido (models.Model):
+
+    reactivo = models.ForeignKey(
+        Reactivo,
+        on_delete=models.CASCADE,
+        verbose_name="Reactivo",
+    ) 
+    cantidad_de_reactivo_consumida = models.FloatField(verbose_name= "Cantidad de React. Consumida:", validators=[MinValueValidator(0.0)])
 
     class Meta:
-        verbose_name = "Libro Registro Operaciones"
-        verbose_name_plural = "Libros Registros Operaciones"
+        verbose_name = "Reactivo consumido"
+        verbose_name_plural = "Reactivos consumidos"
+
+    def clean(self):
+        # Si es una edición, necesitamos considerar la cantidad anterior
+        if self.pk:
+            consumo_anterior = Reactivo_Consumido.objects.get(pk=self.pk)
+            cantidad_a_validar = self.cantidad_de_reactivo_consumida - consumo_anterior.cantidad_de_reactivo_consumida
+            if cantidad_a_validar > 0 and cantidad_a_validar > self.reactivo.cantidad_de_disponible:
+                raise ValidationError({
+                    'cantidad_de_reactivo_consumida': f'No hay suficiente reactivo disponible. Solo hay {self.reactivo.cantidad_de_disponible} unidades disponibles.'
+                })
+        else:
+            # Si es una nueva entrada
+            if self.cantidad_de_reactivo_consumida > self.reactivo.cantidad_de_disponible:
+                raise ValidationError({
+                    'cantidad_de_reactivo_consumida': f'No hay suficiente reactivo disponible. Solo hay {self.reactivo.cantidad_de_disponible} unidades disponibles.'
+                })
+
+    def save(self, *args, **kwargs):
+        self.clean()  # Ejecutamos la validación antes de guardar
+        super().save(*args, **kwargs)
 
     def __str__(self):
-            return f"{self.tipo}"
+        return f"Consumo de {self.reactivo.nombre_del_reactivo}: {self.cantidad_de_reactivo_consumida}"
+
+class Soluciones_Preparadas_Producidas(models.Model):
+
+    soluciones_preparadas = models.ForeignKey(
+        SolucionesPreparadas,
+        on_delete=models.CASCADE,
+        verbose_name="Soluciones preparadas",
+    )
+    cantidad_de_soluciones_preparada_producidas = models.FloatField(verbose_name= "Cantidad Sol. Prep. Producida:", validators=[MinValueValidator(0.0)])
+
+    class Meta:
+        verbose_name = "Solución preparada producida"
+        verbose_name_plural = "Soluciones preparadas producidas"
+
+    def clean(self):
+        # Si es una edición, necesitamos considerar la cantidad anterior
+        if self.pk:
+            produccion_anterior = Soluciones_Preparadas_Producidas.objects.get(pk=self.pk)
+            # Si estamos reduciendo la cantidad
+            if self.cantidad_de_soluciones_preparada_producidas < produccion_anterior.cantidad_de_soluciones_preparada_producidas:
+                diferencia = produccion_anterior.cantidad_de_soluciones_preparada_producidas - self.cantidad_de_soluciones_preparada_producidas
+                # Verificar si hay suficiente cantidad para reducir
+                if diferencia > self.soluciones_preparadas.cantidad_de_la_solucion_preparada:
+                    raise ValidationError({
+                        'cantidad_de_soluciones_preparada_producidas': f'No se puede reducir la cantidad en {diferencia} unidades. Solo hay {self.soluciones_preparadas.cantidad_de_la_solucion_preparada} unidades disponibles.'
+                    })
+        # No necesitamos validación para cantidades nuevas o aumentos porque siempre sumamos al total
+
+    def save(self, *args, **kwargs):
+        self.clean()  # Ejecutamos la validación antes de guardar
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Producción de {self.soluciones_preparadas.nombre_de_la_solucion_preparada}: {self.cantidad_de_soluciones_preparada_producidas}"
+
+
 
 
 class PrepararSoluciones(models.Model):
-    fecha_de_preparacion_de_la_solucion = models.DateField(verbose_name="Fecha de Prep. de la Sol.:")
+    fecha_de_preparacion_de_la_solucion = models.DateTimeField(verbose_name="Fecha de Prep. de la Sol.:")
+    reactivo_consumido = models.ManyToManyField(Reactivo_Consumido, verbose_name="Reactivo consumido")
+    soluciones_preparadas_producidas = models.ManyToManyField(Soluciones_Preparadas_Producidas, verbose_name="Soluciones preparadas producidas")
+
 
     class Meta:
         verbose_name = "Preparar solución"
         verbose_name_plural = "Preparar soluciones"
 
     def __str__(self):
-            return f"{self.registro_de_operacion}"
+            soluciones=[
+                f"{solucion.soluciones_preparadas.nombre_de_la_solucion_preparada}"
+                for solucion in self.soluciones_preparadas_producidas.all()
+                ]
+            return f"{' : '.join(soluciones)}"
 
 
-class Soluciones_Preparadas_Producidas(models.Model):
-    cantidad_de_soluciones_preparada_producidas = models.FloatField(verbose_name= "Cantidad Sol. Prep. Producida:")
-    preparar_soluciones = models.ForeignKey(
-        PrepararSoluciones,
-        on_delete=models.CASCADE,
-        verbose_name="Preparar soluciones",
-    )
-    soluciones_preparadas = models.ForeignKey(
-        SolucionesPreparadas,
-        on_delete=models.CASCADE,
-        verbose_name="Soluciones preparadas",
-    )
-    class Meta:
-        verbose_name = "Solución prep. producida"
-        verbose_name_plural = "Soluciones preparadas producidas"
-
-    def __str__(self):
-            return f"{self.soluciones_preparadas}{self.cantidad_de_soluciones_preparada_producidas}"
-
-
-class Reactivo_Consumido (models.Model):
-    cantidad_de_reactivo_consumida = models.FloatField(verbose_name= "Cantidad de React. Consumida:")
-    preparar_soluciones = models.ForeignKey(
-        PrepararSoluciones,
-        on_delete=models.CASCADE,
-        verbose_name="Preparar soluciones",
-    )
-    reactivo = models.ForeignKey(
-        Reactivo,
-        on_delete=models.CASCADE,
-        verbose_name="Reactivo",
-    )
-    class Meta:
-        verbose_name = "Reactivo consumido"
-        verbose_name_plural = "Reactivos consumidos"
-
-    def __str__(self):
-        return f"{self.reactivo}{self.cantidad_de_reactivo_consumida}"
-
-
-class Cliente(models.Model):
-    nombre_del_cliente = models.CharField(max_length=255, verbose_name="Nombre del cliente: ")
-
-    class Meta:
-        verbose_name = "Cliente"
-        verbose_name_plural = "Clientes"
-
-    def __str__(self):
-        return f"{self.nombre_del_cliente}"
-
-class Muestra(models.Model):
-    identificador_de_la_muestra = models.CharField( max_length=255, verbose_name="Identidicador de la muestra: ")
-    nombre_de_la_muestra = models.CharField(max_length=255, verbose_name="Nombre de la muestra: ")
-    cantidad_de_la_muestra = models.FloatField(verbose_name= "Cantidad de muestra: ")
-    cliente = models.ForeignKey(
-        Cliente,
-        on_delete=models.CASCADE,
-        verbose_name="Cliente",
-    )
-
-    class Meta:
-        verbose_name = "Muestra"
-        verbose_name_plural = "Muestras"
-
-    def __str__(self):
-        return f"{self.nombre_de_la_muestra}{self.identificador_de_la_muestra}"
-
-
-class DeterminacionDeLaGravedadEspecifica (models.Model):
-    temperatura = models.FloatField(verbose_name= "Temperatura:")
-    gravedad_especifica_resultante = models.FloatField(verbose_name= "Grav. Específica Result:")
-    resultado_en_grado_API   = models.FloatField(verbose_name= "Gado API:")
-
-    class Meta:
-        verbose_name = "Det. Gravedad Especifica"
-        verbose_name_plural = "Det. Gravedades Especificas"
-
-    def __str__(self):
-        return f"{self.gravedad_especifica_resultante}{self.temperatura}"
-
-class DeterminacionDeLaTemperaturaDeCalentamiento (models.Model):
-    temperatura_resultante = models.FloatField(verbose_name= "Temperatura Result:")
-    viscosidad_resultante = models.FloatField(verbose_name= "Viscosidad Result:")
-
-    class Meta:
-        verbose_name = "Det. Temp de Calentamiento"
-        verbose_name_plural = "Det. Temps de Calentamiento"
-
-    def __str__(self):
-        return f"{self.temperatura_resultante}{self.viscosidad_resultante}"
-
-
-class DeterminacionDeLaViscosidad(models.Model):
-    viscosidad = models.FloatField(verbose_name="Viscosidad Result:")
-    tiempo_de_inicio = models.DateField (verbose_name= "Tiempo Inicio:")
-    tiempo_de_final = models.DateField (verbose_name= "Tiempo Final:")
-
-    class Meta:
-        verbose_name = "Det. Viscosidad"
-        verbose_name_plural = "Det. Viscosidades"
-
-    def __str__(self):
-        return f"{self.viscosidad}"
-
-class DeterminacionDelValorCaloricoSuperior_Calorimetro (models.Model):
-    temperatura_introducida = models.FloatField(verbose_name="Temp. Introducida:")
-    valor_calorico_superior_resultante = models.FloatField(verbose_name="Valor Calórico Result:")
-    porciento_de_asufre_resultante = models.FloatField(verbose_name="% de Asufre Result:")
-    porciento_de_hidrogeno_resultante = models.FloatField(verbose_name="% de Hidrógeno Result:")
-    porciento_de_carbono_resultante = models.FloatField(verbose_name="% de Carbono Result:")
-
-    class Meta:
-        verbose_name = "Det. Valor Calórico Sup Calorím"
-        verbose_name_plural = "Det. Valores Calóricos Sup Calorím"
-
-    def __str__(self):
-        return f"{self.temperatura_introducida}{self.valor_calorico_superior_resultante}"
-
-
-class DeterminacionDelValorCaloricoSuperior_Algoritmo(models.Model):
-
-    valor_calorico_superior_resultante = models.FloatField(verbose_name="Valor Calórico Result:")
-    gravedad_especifica_del_combustible = models.FloatField(verbose_name="Gravedad Específica:")
-    porcentaje_de_agua = models.FloatField(verbose_name="Porcentaje de Agua:")
-
-    class Meta:
-        verbose_name = "Det. Valor Calórico Sup. Algor"
-        verbose_name_plural = "Det. Valores Calóricos Sup Algor"
-
-    def __str__(self):
-        return f"{self.valor_calorico_superior_resultante}"
-
-class DeterminacionDelValorCaloricoSuperior(models.Model):
-
-    esta_roto = models.BooleanField (verbose_name="Está Roto el Calorímetro", default=False)
-
-    determinacion_del_valor_calorico_superior_Calorimetro = models.ForeignKey(
-        DeterminacionDelValorCaloricoSuperior_Calorimetro,
-        on_delete=models.SET_NULL,
-        verbose_name="Valor Calórico Sup. en el Calorímetro",
-        blank=True,
-        null=True
-    )
-    determinacion_del_valor_calorico_superior_Algoritmo = models.ForeignKey(
-        DeterminacionDelValorCaloricoSuperior_Algoritmo,
-        on_delete=models.SET_NULL,
-        verbose_name="Valor Calórico Sup. Medeiante el Algorítmo",
-        blank=True,
-        null=True
-    )
-
-    class Meta:
-        verbose_name = "Det. Valor Calórico Sup"
-        verbose_name_plural = "Det. Valores Calóricos Sup"
-
-    def __str__(self):
-        return f"{self.esta_roto}"
-
-
-class RegistroDeOperacion (models.Model):
-    identificador_del_registro_de_operacion= models.CharField( max_length=255, verbose_name="Identidicador:")
-    fecha_de_registro_de_operacion = models.DateField(verbose_name="Fecha del registro:")
-    descripicion_del_registro_de_operacion = models.CharField(max_length=255, verbose_name="Descripción del registro:")
+class EnsayoAguaVapor (models.Model):
+    nombre_ensayo = models.CharField( max_length=255, verbose_name="Nombre del ensayo:")
+    fecha_del_ensayo = models.DateTimeField(verbose_name="Fecha del ensayo:")
+   
     trabajador = models.ManyToManyField(Trabajador, verbose_name="Trabajador")
-
-    preparar_soluciones = models.ForeignKey(
-        PrepararSoluciones,
-        on_delete=models.SET_NULL,
-        verbose_name="Preparar Soluciones",
-        blank=True,
-        null=True
-    )
-
-    determinacion_de_la_gravedad_especifica = models.ForeignKey(
-        DeterminacionDeLaGravedadEspecifica,
-        on_delete=models.SET_NULL,
-        verbose_name="Det. Gravedad Especifica:",
-        blank=True,
-        null=True
-    )
-
-    determinacion_de_la_temperatura_de_calentamiento = models.ForeignKey(
-        DeterminacionDeLaTemperaturaDeCalentamiento,
-        on_delete=models.SET_NULL,
-        verbose_name="Det. Temp de Calentamiento:",
-        blank=True,
-        null=True
-    )
-
-    determinacion_de_la_viscosidad = models.ForeignKey(
-        DeterminacionDeLaViscosidad,
-        on_delete=models.SET_NULL,
-        verbose_name="Det. Viscosidad:",
-        blank=True,
-        null=True
-    )
-
-    determinacion_del_valor_calorico_superior = models.ForeignKey(
-        DeterminacionDelValorCaloricoSuperior,
-        on_delete=models.SET_NULL,
-        verbose_name="Det. Valor Calórico Sup:",
-        blank=True,
-        null=True
-    )
-
-    muestra = models.ForeignKey(
-        Muestra,
-        on_delete=models.SET_NULL,
-        verbose_name="Muestra",
-        blank=True,
-        null=True
-    )
-
-    libroDeRegistroDeOperacione = models.ForeignKey(
-        LibroDeRegistroDeOperacione,
-        on_delete=models.CASCADE,
-        verbose_name="Libro de Registro de Operacione",
-    )
+    
+    preparar_soluciones = models.ManyToManyField(PrepararSoluciones, verbose_name= "Soluciones preparadas para este ensaayo")
+    descripicion_del_ensayo = models.TextField(verbose_name= "Descripción del ensayo", blank=True, null=True)
 
     class Meta:
-        verbose_name = "Registro de operación"
-        verbose_name_plural = "Registro de operaciones"
+        verbose_name = "Ensayo Agua-Vapor"
+        verbose_name_plural = "Ensayos Agua-Vapor"
 
     def __str__(self):
-            return f"{self.identificador_del_registro_de_operacion}"
+        return f"{self.nombre_ensayo}"
+
+
+class EnsayoDelCombustible (models.Model):
+    nombre_ensayo = models.CharField( max_length=255, verbose_name="Nombre del ensayo:")
+    fecha_del_ensayo = models.DateTimeField(verbose_name="Fecha del ensayo:")
+    result_determinacion_de_la_viscosidad = models.FloatField(verbose_name="Resultado de la viscosidad", validators=[MinValueValidator(0.0)])
+    result_determinacion_de_la_temperatura_de_calentamiento = models.FloatField(verbose_name="Resultado de la Temp. de calentamiento", validators=[MinValueValidator(0.0)])
+    result_determinacion_del_valor_calorico = models.FloatField(verbose_name="Resultado del valor calórico", validators=[MinValueValidator(0.0)])
+    result_determinacion_de_la_gravedad_especifica = models.FloatField(verbose_name="Resultado de la gravedad específica", validators=[MinValueValidator(0.0)])
+   
+    trabajador = models.ManyToManyField(Trabajador, verbose_name="Trabajador")
+    preparar_soluciones = models.ManyToManyField(PrepararSoluciones, verbose_name= "Soluciones preparadas para este ensaayo")
+
+    descripicion_del_resultado = models.TextField(verbose_name= "Descripción del resultado", blank=True, null=True)
+
+
+    class Meta:
+        verbose_name = "Ensayo del Combustible"
+        verbose_name_plural = "Ensayos del Combustible"
+
+    def __str__(self):
+        return f"{self.nombre_ensayo}"
+
+
+class Informe (models.Model):
+    titulo_del_informe= models.CharField( max_length=255, verbose_name="Título del informe:")
+    fecha_del_informe = models.DateTimeField(verbose_name="Fecha del informe:")
+    
+    trabajador = models.ManyToManyField(Trabajador, verbose_name="Trabajador")
+    preparar_soluciones = models.ManyToManyField(PrepararSoluciones, verbose_name= "Soluciones preparadas para este ensaayo")
+
+    ensayo_aguavapor = models.ForeignKey(
+        EnsayoAguaVapor,
+        on_delete=models.SET_NULL,
+        verbose_name="Ensayo Agua-Vapor",
+        blank=True,
+        null=True
+    )
+
+    ensayo_del_combustible = models.ForeignKey(
+        EnsayoDelCombustible,
+        on_delete=models.SET_NULL,
+        verbose_name="Ensayo del Combustible",
+        blank=True,
+        null=True
+    )
+
+    descripicion_del_informe = models.TextField(verbose_name= "Descripción del informe", blank=True, null=True)
+
+    def clean(self):
+        if not self.ensayo_aguavapor and not self.ensayo_del_combustible:
+            raise ValidationError("Debe seleccionar al menos un tipo de ensayo (Agua-Vapor o Combustible)")
+        return super().clean()
+
+    class Meta:
+        verbose_name = "Informe"
+        verbose_name_plural = "Informes"
+
+    def __str__(self):
+            return f"{self.titulo_del_informe}"

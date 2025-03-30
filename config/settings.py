@@ -107,24 +107,23 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
+USE_SQLITE = str(os.environ.get("USE_SQLITE", default=False)).lower() == "true"
+DATABASES = {}
+if USE_SQLITE:
+    DATABASES["default"] = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
-    # "default": {
-    #     "ENGINE": "django.db.backends.postgresql",
-    #     "NAME": os.environ.get("DATABASE_NAME"),
-    #     "USER": os.environ.get("DATABASE_USER"),
-    #     "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-    #     "HOST": os.environ.get("POSTGRES_HOST"),
-    #     "PORT": int(os.environ.get("POSTGRES_PORT")),
-    # }
-}
+else:
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DATABASE_NAME"),
+        "USER": os.environ.get("DATABASE_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": int(os.environ.get("POSTGRES_PORT")),
+    }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -174,40 +173,55 @@ AUTH_USER_MODEL = "users.User"
 
 JAZZMIN_SETTINGS = {
     "welcome_sign": "Bienvenido",
-    # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "Administración",
-    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "Administración",
-    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "Administración",
-    # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": "img/logo.png",
-    # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": "img/logo.png",
-    # Logo to use for login form in dark themes (defaults to login_logo)
-    "login_logo_dark": "img/logo.png",
-    # CSS classes that are applied to the logo above
+    "topmenu_links": [
+        # Url that gets reversed (Permissions can be added)
+        {
+            "name": "Plantillas Reportes",
+            "url": "/reportbroD",
+            "permissions": [
+                "reportbroD.view_reportrequest",
+                "reportbroD.delete_reportrequest",
+                "reportbroD.change_reportrequest",
+                "reportbroD.add_reportrequest",
+                "reportbroD.view_reportdefinition",
+                "reportbroD.delete_reportdefinition",
+                "reportbroD.change_reportdefinition",
+                "reportbroD.add_reportdefinition",
+            ],
+        },
+    ],
+    "site_title": "Labquim",
+    "site_header": "Labquim",
+    "site_brand": "Labquim",
+    "site_logo": "img/logo 0017.png",
+    "login_logo": "img/logo 0020.png",
+    "login_logo_dark": "img/logo 0020.png",
     "site_logo_classes": "",
-    # Icons that are used when one is not manually specified
-    "default_icon_parents": "fas fa-chevron-circle-right",
-
-    # Whether to display the side menu
-    "show_sidebar": True,
-
-    # Whether to aut expand the menu
-    "navigation_expanded": True,
-
+    # Iconos para cada modelo
+    "icons": {
+        "project.EquipamientoDelLaboratorio": "fas fa-warehouse",  # Icono de almacén para equipamiento
+        "project.Reactivo": "fas fa-flask",  # Icono de matraz para reactivos
+        "project.EntradaDeReactivo": "fas fa-plus-circle",  # Icono de más para entrada de reactivos
+        "project.SolucionesPreparadas": "fas fa-vial",  # Icono de vial para soluciones
+        "project.Trabajador": "fas fa-user",  # Icono de usuario para trabajadores
+        "project.PrepararSoluciones": "fas fa-mortar-pestle",  # Icono de mortero para preparar soluciones
+        "project.EnsayoAguaVapor": "fas fa-tint",  # Icono de gota para ensayos de agua
+        "project.EnsayoDelCombustible": "fas fa-fire",  # Icono de fuego para ensayos de combustible
+        "project.Informe": "fas fa-file-alt",  # Icono de documento para informes
+        "project.Soluciones_Preparadas_Producidas": "fas fa-fill-drip",  # Icono de líquido goteando
+        "users.User": "fas fa-users",  # Icono de usuarios para el modelo de usuarios
+    },
     "custom_links": {
         "project": [{
             "name": "Soluciones", 
             "url": "soluciones", 
-            "icon": "fas fa-comments",
+            "icon": "fas fa-eye-dropper",  # Cambiado a gotero
             # "permissions":["reportbroD.view_reportrequest"]
         },
         {
             "name": "Capilares", 
             "url": "capilares", 
-            "icon": "fas fa-comments",
+            "icon": "fas fa-thermometer-half",  # Cambiado a termómetro
             # "permissions":["reportbroD.view_reportrequest"]
         }]
     },

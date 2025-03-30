@@ -1,3 +1,67 @@
-{% extends "admin/base_site.html" %} {% load static %} {% block content %}
-Lo capilares
+{% extends "admin/base_site.html" %} 
+{% load static %}
+{% block content %}
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Capilares</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Buscar Capilares</h3>
+                        </div>
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="numero">Número:</label>
+                                    <input type="number" class="form-control" id="numero" name="numero" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Buscar</button>
+                            </form>
+
+                            {% if error %}
+                                <div class="alert alert-danger">
+                                    {{ error }}
+                                </div>
+                            {% elif bulbo %}
+                                <h3>Datos para el número {{ numero }}</h3>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Capacidad</th>
+                                            <th>Bulbo 40°C (C/J)</th>
+                                            <th>Bulbo 50°C (C/J)</th>
+                                            <th>Bulbo 80°C (C/J)</th>
+                                            <th>Bulbo 100°C (C/J)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{ bulbo.no }}</td>
+                                            <td>{{ bulbo.capacidad }}</td>
+                                            <td>{{ bulbo.bulbo_40.bulbo_c }} / {{ bulbo.bulbo_40.bulbo_j }}</td>
+                                            <td>{{ bulbo.bulbo_50.bulbo_c }} / {{ bulbo.bulbo_50.bulbo_j }}</td>
+                                            <td>{{ bulbo.bulbo_80.bulbo_c }} / {{ bulbo.bulbo_80.bulbo_j }}</td>
+                                            <td>{{ bulbo.bulbo_100.bulbo_c }} / {{ bulbo.bulbo_100.bulbo_j }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
