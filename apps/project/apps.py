@@ -26,6 +26,8 @@ class ProjectConfig(AppConfig):
 
     def ready(self):
         post_migrate.connect(config_app, sender=self)
+        # Import signals
+        from . import signals  # noqa
         # Register template tags
         from django.template.defaulttags import register
         from apps.project.templatetags.admin_filters import in_category
