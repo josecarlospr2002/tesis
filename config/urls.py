@@ -33,7 +33,7 @@ urlpatterns = [
             [
                 path("", include("apps.users.urls")),
                 path("", include("apps.project.urls")),
-                # path("reportbroD/", include("django_reportbroD.urls", namespace="reportbroD")),
+                path("reportbroD/", include("django_reportbroD.urls", namespace="reportbroD")),
                 # YOUR PATTERNS
                 path("schema/", SpectacularAPIView.as_view(), name="schema"),
                 # Optional UI:

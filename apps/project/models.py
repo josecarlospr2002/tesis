@@ -237,7 +237,7 @@ class Informe (models.Model):
     ensayo_del_combustible = models.ForeignKey(
         EnsayoDelCombustible,
         on_delete=models.SET_NULL,
-        verbose_name="Ensayoo del Combustible",
+        verbose_name="Ensayo del Combustible",
         blank=True,
         null=True
     )

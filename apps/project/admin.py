@@ -2,6 +2,7 @@
 from django.contrib import admin
 
 from apps.project.models import *
+from apps.project.utils.utils_reportes_d import generar_reporte_informe_laboratorio_pdf
 
 
 @admin.register(EquipamientoDelLaboratorio)
@@ -125,6 +126,7 @@ class Soluciones_Preparadas_ProducidasAdmin(admin.ModelAdmin):
     list_display_links = list(list_display).copy()
 
 
+
 @admin.register(Reactivo_Consumido)
 class Reactivo_ConsumidoAdmin(admin.ModelAdmin):
     list_display = (
@@ -198,6 +200,7 @@ class InformeAdmin(admin.ModelAdmin):
         "trabajador",
         "preparar_soluciones",
     ]
+    actions = [generar_reporte_informe_laboratorio_pdf]
 
 
 
