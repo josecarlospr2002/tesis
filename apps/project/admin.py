@@ -3,6 +3,7 @@ from django.contrib import admin
 
 from apps.project.models import *
 from apps.project.utils.utils_reportes_d import generar_reporte_informe_laboratorio_pdf
+from django.utils.safestring import mark_safe
 
 
 @admin.register(EquipamientoDelLaboratorio)
@@ -145,16 +146,67 @@ class Reactivo_ConsumidoAdmin(admin.ModelAdmin):
 
 @admin.register(EnsayoAguaVapor)
 class EnsayoAguaVaporAdmin(admin.ModelAdmin):
+    def get_trabajadores(self, obj):
+        trabajador = [trabajador.nombre_apellido for trabajador in obj.trabajador.all()]
+        return mark_safe("<br>\n".join(trabajador))
+
+    get_trabajadores.short_description = "Trabajador/res"
+   
     list_display = (
         "nombre_ensayo",
         "fecha_del_ensayo",
+        "get_trabajadores",
     )
     list_filter = (
         "nombre_ensayo",
 
     )
     date_hierarchy = "fecha_del_ensayo"
-    ordering = list(list_display).copy()
+    ordering = (
+        "nombre_ensayo",
+        "fecha_del_ensayo",
+       
+    )
+    list_display_links = list(list_display).copy()
+    filter_horizontal = [
+        "trabajador",
+        "preparar_soluciones",
+    ]
+
+# @admin.register(Cuadro)
+# class CuadroAdmin(admin.ModelAdmin):
+#     def get_cargos_sin_cubrir(self, obj):
+#         cargos = [cargo.cargo for cargo in obj.cargosincubrir_set.all()]
+#         return mark_safe("<br>\n".join(cargos))
+
+#     get_cargos_sin_cubrir.short_description = "Cargos sin Cubrir"
+
+#     list_display = ("empresa", "aprobada", "cubierta", "get_cargos_sin_cubrir")
+
+@admin.register(EnsayoDelCombustible)
+class EnsayoDelCombustibleAdmin(admin.ModelAdmin):
+
+    def get_trabajadores(self, obj):
+        trabajador = [trabajador.nombre_apellido for trabajador in obj.trabajador.all()]
+        return mark_safe("<br>\n".join(trabajador))
+
+    get_trabajadores.short_description = "Trabajador/res"        
+    
+    list_display = (
+        "nombre_ensayo",
+        "fecha_del_ensayo",
+        "get_trabajadores",
+
+    )
+    list_filter = (
+        "nombre_ensayo",
+    )
+    date_hierarchy = "fecha_del_ensayo"
+    ordering = (
+        "nombre_ensayo",
+        "fecha_del_ensayo",
+    )
+
     list_display_links = list(list_display).copy()
     filter_horizontal = [
         "trabajador",
@@ -162,30 +214,19 @@ class EnsayoAguaVaporAdmin(admin.ModelAdmin):
     ]
 
 
-    @admin.register(EnsayoDelCombustible)
-    class EnsayoDelCombustibleAdmin(admin.ModelAdmin):
-        list_display = (
-            "nombre_ensayo",
-            "fecha_del_ensayo",
-
-        )
-        list_filter = (
-            "nombre_ensayo",
-        )
-        date_hierarchy = "fecha_del_ensayo"
-        ordering = list(list_display).copy()
-        list_display_links = list(list_display).copy()
-        filter_horizontal = [
-            "trabajador",
-            "preparar_soluciones",
-        ]
-
-
 @admin.register(Informe)
 class InformeAdmin(admin.ModelAdmin):
+
+    def get_trabajadores(self, obj):
+        trabajador = [trabajador.nombre_apellido for trabajador in obj.trabajador.all()]
+        return mark_safe("<br>\n".join(trabajador))
+
+    get_trabajadores.short_description = "Trabajador/res"        
+
     list_display = (
         "titulo_del_informe",
         "fecha_del_informe",
+        "get_trabajadores",
 
     )
     list_filter = (
@@ -194,7 +235,11 @@ class InformeAdmin(admin.ModelAdmin):
         "ensayo_del_combustible",
     )
     date_hierarchy = "fecha_del_informe"
-    ordering = list(list_display).copy()
+    ordering = (
+        "titulo_del_informe",
+        "fecha_del_informe",
+
+    )
     list_display_links = list(list_display).copy()
     filter_horizontal = [
         "trabajador",
