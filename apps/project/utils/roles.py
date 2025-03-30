@@ -70,6 +70,7 @@ def crear_roles_django_default():
             PrepararSoluciones,
             EnsayoAguaVapor,
             EnsayoDelCombustible,
+            Trabajador,
             Informe
         ],
     )
