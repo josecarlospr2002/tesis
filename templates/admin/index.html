@@ -14,6 +14,8 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    {% if perms.project.view_ensayoaguavapor or perms.project.view_ensayodelcombustible or perms.project.view_informe %}
+                    {% if perms.project.view_ensayoaguavapor %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -24,6 +26,8 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if perms.project.view_ensayodelcombustible %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -34,6 +38,8 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if perms.project.view_informe %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -44,6 +50,12 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="col-md-12">
+                        <p class="text-muted text-center">No tienes acceso a esta sección.</p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -59,6 +71,8 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    {% if perms.project.view_reactivo or perms.project.view_entradadereactivo or perms.project.view_reactivo_consumido %}
+                    {% if perms.project.view_reactivo %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -69,6 +83,8 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if perms.project.view_entradadereactivo %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -79,6 +95,8 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if perms.project.view_reactivo_consumido %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -89,6 +107,12 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="col-md-12">
+                        <p class="text-muted text-center">No tienes acceso a esta sección.</p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -104,6 +128,8 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    {% if perms.project.view_prepararsoluciones or perms.project.view_soluciones_preparadas_producidas or perms.project.view_solucionespreparadas %}
+                    {% if perms.project.view_prepararsoluciones %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -114,6 +140,8 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if perms.project.view_soluciones_preparadas_producidas %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -124,6 +152,8 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if perms.project.view_solucionespreparadas %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -134,28 +164,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Custom Links -->
+                    {% endif %}
+                    {% else %}
                     <div class="col-md-12">
-                        <div class="info-box">
-                            <span class="info-box-icon">
-                                <i class="fas fa-comments"></i>
-                            </span>
-                            <div class="info-box-content">
-                                <a href="/soluciones/" class="info-box-text">Soluciones</a>
-                            </div>
-                        </div>
+                        <p class="text-muted text-center">No tienes acceso a esta sección.</p>
                     </div>
-                    <div class="col-md-12">
-                        <div class="info-box">
-                            <span class="info-box-icon">
-                                <i class="fas fa-comments"></i>
-                            </span>
-                            <div class="info-box-content">
-                                <a href="/capilares/" class="info-box-text">Capilares</a>
-                            </div>
-                        </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -171,6 +185,8 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    {% if perms.project.view_equipamientodellaboratorio or perms.project.view_trabajador or perms.project.view_capilares %}
+                    {% if perms.project.view_equipamientodellaboratorio %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -181,6 +197,8 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if perms.project.view_trabajador %}
                     <div class="col-md-12">
                         <div class="info-box">
                             <span class="info-box-icon">
@@ -191,6 +209,24 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if perms.project.view_capilares %}
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon">
+                                <i class="fas fa-comments"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <a href="/capilares/" class="info-box-text">Capilares</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% else %}
+                    <div class="col-md-12">
+                        <p class="text-muted text-center">No tienes acceso a esta sección.</p>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
