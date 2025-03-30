@@ -140,8 +140,28 @@ class Reactivo_Consumido (models.Model):
         verbose_name = "Reactivo consumido"
         verbose_name_plural = "Reactivos consumidos"
 
+    def clean(self):
+        # Si es una edición, necesitamos considerar la cantidad anterior
+        if self.pk:
+            consumo_anterior = Reactivo_Consumido.objects.get(pk=self.pk)
+            cantidad_a_validar = self.cantidad_de_reactivo_consumida - consumo_anterior.cantidad_de_reactivo_consumida
+            if cantidad_a_validar > 0 and cantidad_a_validar > self.reactivo.cantidad_de_disponible:
+                raise ValidationError({
+                    'cantidad_de_reactivo_consumida': f'No hay suficiente reactivo disponible. Solo hay {self.reactivo.cantidad_de_disponible} unidades disponibles.'
+                })
+        else:
+            # Si es una nueva entrada
+            if self.cantidad_de_reactivo_consumida > self.reactivo.cantidad_de_disponible:
+                raise ValidationError({
+                    'cantidad_de_reactivo_consumida': f'No hay suficiente reactivo disponible. Solo hay {self.reactivo.cantidad_de_disponible} unidades disponibles.'
+                })
+
+    def save(self, *args, **kwargs):
+        self.clean()  # Ejecutamos la validación antes de guardar
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.reactivo}{self.cantidad_de_reactivo_consumida}"
+        return f"Consumo de {self.reactivo.nombre_del_reactivo}: {self.cantidad_de_reactivo_consumida}"
 
 class Soluciones_Preparadas_Producidas(models.Model):
 
@@ -156,8 +176,26 @@ class Soluciones_Preparadas_Producidas(models.Model):
         verbose_name = "Solución preparada producida"
         verbose_name_plural = "Soluciones preparadas producidas"
 
+    def clean(self):
+        # Si es una edición, necesitamos considerar la cantidad anterior
+        if self.pk:
+            produccion_anterior = Soluciones_Preparadas_Producidas.objects.get(pk=self.pk)
+            # Si estamos reduciendo la cantidad
+            if self.cantidad_de_soluciones_preparada_producidas < produccion_anterior.cantidad_de_soluciones_preparada_producidas:
+                diferencia = produccion_anterior.cantidad_de_soluciones_preparada_producidas - self.cantidad_de_soluciones_preparada_producidas
+                # Verificar si hay suficiente cantidad para reducir
+                if diferencia > self.soluciones_preparadas.cantidad_de_la_solucion_preparada:
+                    raise ValidationError({
+                        'cantidad_de_soluciones_preparada_producidas': f'No se puede reducir la cantidad en {diferencia} unidades. Solo hay {self.soluciones_preparadas.cantidad_de_la_solucion_preparada} unidades disponibles.'
+                    })
+        # No necesitamos validación para cantidades nuevas o aumentos porque siempre sumamos al total
+
+    def save(self, *args, **kwargs):
+        self.clean()  # Ejecutamos la validación antes de guardar
+        super().save(*args, **kwargs)
+
     def __str__(self):
-            return f"{self.soluciones_preparadas.nombre_de_la_solucion_preparada}{self.cantidad_de_soluciones_preparada_producidas}"
+        return f"Producción de {self.soluciones_preparadas.nombre_de_la_solucion_preparada}: {self.cantidad_de_soluciones_preparada_producidas}"
 
 
 
